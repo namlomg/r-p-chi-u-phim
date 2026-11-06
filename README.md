@@ -65,9 +65,9 @@ Các ví dụ dưới đây dùng dữ liệu mẫu, trừ một số ảnh minh
 
 ![Menu chính](docs/screenshots/01-menu-chinh.png)
 
-Cột trái là 8 chức năng, chọn bằng `↑` `↓` rồi `Enter`, hoặc nhấn phím số `1` đến `8`. `Esc` tương đương chọn Thoát.
+Phần trên là bảng hiệu `CINEMA` với rèm sân khấu ở hai góc và dải phim bên dưới. Khung **Chức năng** bên trái có 8 mục, chọn bằng `↑` `↓` rồi `Enter`, hoặc nhấn phím số `1` đến `8`. Mục đang chọn được tô nền vàng; `Esc` tương đương chọn Thoát.
 
-Cột phải là phần tổng quan, tính lại mỗi lần vẽ màn hình:
+Khung **Tổng quan** bên phải được tính lại mỗi lần vẽ màn hình:
 
 | Chỉ số | Giá trị mẫu | Cách tính |
 |---|---|---|

@@ -768,28 +768,78 @@ static void doc_luc_mo(UngDung *a) {
 
 /* ---------- Menu chính ---------- */
 
+static void ve_hop_vien(int hang, int cot, int rong, int cao, const char *tieu_de, int mau) {
+    char ngang[256] = "";
+    int i, con = rong - 5 - nl_do_rong(tieu_de);
+
+    for (i = 0; i < con; i++) strcat(ngang, "─");
+    ui_in(hang, cot, mau, M_NEN, "┌─ ");
+    ui_in(hang, cot + 3, M_NHAN, M_NEN, "%s", tieu_de);
+    ui_in(hang, cot + 3 + nl_do_rong(tieu_de), mau, M_NEN, " %s┐", ngang);
+    for (i = 1; i < cao - 1; i++) {
+        ui_in(hang + i, cot, mau, M_NEN, "│");
+        ui_in(hang + i, cot + rong - 1, mau, M_NEN, "│");
+    }
+    ngang[0] = '\0';
+    for (i = 0; i < rong - 2; i++) strcat(ngang, "─");
+    ui_in(hang + cao - 1, cot, mau, M_NEN, "└%s┘", ngang);
+}
+
+static void ve_dai_phim(int hang) {
+    char dai[128] = "";
+    int i;
+    for (i = 0; i < 19; i++) strcat(dai, " ■  ");
+    ui_in(hang, 1, 243, M_TOI, "%s", dai);
+}
+
 static void ve_tong_quan(const UngDung *a) {
     char tien[32], so[32];
     int tong_ghe = tk_tong_ghe(a->ds), ve = tk_tong_ve(a->ds);
     int ti_le = tong_ghe ? ve * 100 / tong_ghe : 0;
 
-    ui_in(5, 42, M_NHAN, M_NEN, "TỔNG QUAN");
+    ve_hop_vien(9, 41, 34, 11, "TỔNG QUAN", M_VIEN);
     snprintf(so, sizeof so, "%d", sc_dem(a->ds));
-    ui_o(7, 42, 16, M_MO, M_NEN, 0, "Suất chiếu");
-    ui_o(7, 58, 15, M_CHU, M_NEN, 1, so);
+    ui_o(10, 43, 15, M_MO, M_NEN, 0, "Suất chiếu");
+    ui_o(10, 58, 15, M_CHU, M_NEN, 1, so);
     snprintf(so, sizeof so, "%d", ve);
-    ui_o(9, 42, 16, M_MO, M_NEN, 0, "Vé đã bán");
-    ui_o(9, 58, 15, M_CHU, M_NEN, 1, so);
-    snprintf(so, sizeof so, "%d", tong_ghe - ve);
-    ui_o(11, 42, 16, M_MO, M_NEN, 0, "Ghế còn trống");
+    ui_o(11, 43, 15, M_MO, M_NEN, 0, "Vé đã bán");
     ui_o(11, 58, 15, M_CHU, M_NEN, 1, so);
+    snprintf(so, sizeof so, "%d", tong_ghe - ve);
+    ui_o(12, 43, 15, M_MO, M_NEN, 0, "Ghế còn trống");
+    ui_o(12, 58, 15, M_CHU, M_NEN, 1, so);
     nl_tien(tk_tong_doanh_thu(a->ds), tien, sizeof tien);
     snprintf(so, sizeof so, "%s đ", tien);
-    ui_o(13, 42, 16, M_MO, M_NEN, 0, "Doanh thu");
-    ui_o(13, 58, 15, M_VANG, M_NEN, 1, so);
-    snprintf(so, sizeof so, "Lấp đầy %d%%", ti_le);
-    ui_o(15, 42, 31, M_MO, M_NEN, 0, so);
-    ve_thanh(16, 42, 31, ve, tong_ghe);
+    ui_o(14, 43, 15, M_MO, M_NEN, 0, "Doanh thu");
+    ui_o(14, 58, 15, M_VANG, M_NEN, 1, so);
+    snprintf(so, sizeof so, "%d%%", ti_le);
+    ui_o(16, 43, 15, M_MO, M_NEN, 0, "Lấp đầy");
+    ui_o(16, 58, 15, M_XANH, M_NEN, 1, so);
+    ve_thanh(17, 43, 30, ve, tong_ghe);
+}
+
+/* Bảng hiệu rạp: rèm sân khấu hai bên, chữ lớn ở giữa và dải phim bên dưới. */
+static void ve_bang_hieu(void) {
+    static const char *const CHU[] = {
+        "█▀▀ █ █▄ █ █▀▀ █▀▄▀█ ▄▀█",
+        "█   █ █ ▀█ █▀▀ █ ▀ █ █▀█",
+        "▀▀▀ ▀ ▀  ▀ ▀▀▀ ▀   ▀ ▀ ▀",
+    };
+    static const int MAU_CHU[] = {229, 221, 209};
+    int i, j;
+
+    for (i = 0; i < 5; i++) {
+        char day[64] = "";
+        int dac = 8 - i * 2 > 1 ? 8 - i * 2 : 1, rong = dac + 3;
+        for (j = 0; j < dac; j++) strcat(day, "█");
+        ui_in(3 + i, 1, 124, M_NEN, "%s", day);
+        ui_in(3 + i, 1 + dac, 124, M_NEN, "▓▒░");
+        ui_in(3 + i, 77 - rong, 124, M_NEN, "░▒▓");
+        ui_in(3 + i, 80 - rong, 124, M_NEN, "%s", day);
+    }
+    for (i = 0; i < 3; i++) ui_o(4 + i, 16, 46, MAU_CHU[i], M_NEN, 2, CHU[i]);
+    ui_o(7, 16, 46, M_MO, M_NEN, 2, "Q U Ả N   L Ý   Đ Ặ T   V É");
+    ve_dai_phim(8);
+    ve_dai_phim(20);
 }
 
 void man_chay(const char *tep_du_lieu) {
@@ -810,11 +860,15 @@ void man_chay(const char *tep_du_lieu) {
         int i, phim, thuc_hien = 0;
 
         khung(&a, "Menu chính", "↑↓ Di chuyển   Enter Chọn   1-8 Chọn nhanh   Esc Thoát");
-        ui_in(4, 4, M_NHAN, M_NEN, "CHỨC NĂNG");
+        ve_bang_hieu();
+        ve_hop_vien(9, 3, 36, 11, "CHỨC NĂNG", M_VIEN);
         for (i = 0; i < SO_MUC; i++) {
-            int y = 6 + i + (i == SO_MUC - 1), fg = i == chon ? M_TOI : M_CHU, bg = i == chon ? M_VANG : M_NEN;
-            ui_o(y, 3, 34, fg, bg, 0, "");
-            ui_in(y, 4, fg, bg, "%s %d  %s", i == chon ? "►" : " ", i + 1, MUC[i]);
+            int y = 10 + i + (i == SO_MUC - 1), dang = i == chon, thoat = i == SO_MUC - 1;
+            int bg = dang ? M_VANG : M_NEN, fg = dang ? M_TOI : (thoat ? M_DO : M_CHU);
+            ui_o(y, 4, 34, fg, bg, 0, "");
+            ui_in(y, 5, fg, bg, "%s", dang ? "►" : " ");
+            ui_in(y, 7, dang ? M_TOI : (thoat ? M_DO : M_VANG), bg, "%d", i + 1);
+            ui_in(y, 10, fg, bg, "%s", MUC[i]);
         }
         ve_tong_quan(&a);
         ui_xuat();
