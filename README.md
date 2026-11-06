@@ -47,7 +47,19 @@ Cửa sổ console cần rộng ít nhất 80 cột và cao 25 dòng; nếu nh�
 
 ## Giải thích từng màn hình
 
-Các ví dụ dưới đây dùng dữ liệu mẫu. Mọi màn hình đều có dòng phím tắt ở đáy khung và trạng thái ở góc trên bên phải: `● Đã lưu` hoặc `● Chưa lưu`.
+Các ví dụ dưới đây dùng dữ liệu mẫu, trừ một số ảnh minh họa phòng lớn nhất, dãy không tìm thấy và trạng thái chưa có dữ liệu. Mọi màn hình đều có dòng phím tắt ở đáy khung và trạng thái ở góc trên bên phải: `● Đã lưu` hoặc `● Chưa lưu`.
+
+| Mục | Màn hình | Thông báo và trường hợp đặc biệt |
+|---|---|---|
+| [1](#1-menu-chính) | Menu chính | |
+| [2](#2-lịch-chiếu) | Danh sách lịch chiếu | Suất hết vé, danh sách dài phải cuộn |
+| [3](#3-sơ-đồ-ghế-và-kiểm-tra-ghế-trống) | Sơ đồ ghế, tìm dãy ghế | Con trỏ trên ghế đã đặt, nhập số ghế, dãy tiếp theo, hết dãy, số ghế không hợp lệ, số ghế quá lớn, không có dãy, phòng lớn nhất |
+| [4](#4-thêm-lịch-chiếu) | Form thêm lịch chiếu, thêm thành công | Lỗi từng trường, trùng mã suất, mã phim khác tên, trùng lịch |
+| [5](#5-đặt-vé) | Chọn ghế, thông tin khách, xác nhận, thành công | Tự chọn dãy ghế, không có dãy, ghế đã đặt, chưa chọn ghế, thiếu họ tên, số điện thoại sai |
+| [6](#6-hủy-vé) | Chọn vé, xác nhận, thành công | Ghế chưa có người đặt, suất chưa có vé |
+| [7](#7-thống-kê-doanh-thu) | Thống kê theo suất, theo phim | Bảng dài phải cuộn |
+| [8](#8-lưu-đọc-lại-và-thoát) | Lưu, đọc lại, thoát | Lỗi khi lưu, đọc lại khi chưa lưu, đọc lại thất bại, thoát khi chưa lưu |
+| [9](#9-các-trạng-thái-đặc-biệt) | Trạng thái đặc biệt | Chưa có dữ liệu, tệp hỏng, cửa sổ quá nhỏ |
 
 ### 1. Menu chính
 
@@ -71,6 +83,14 @@ Cột phải là phần tổng quan, tính lại mỗi lần vẽ màn hình:
 
 Danh sách suất chiếu luôn được sắp theo thời gian. Cột **Trống** có dạng `ghế trống/tổng ghế`, ví dụ S01 có 6 hàng × 10 cột = 60 ghế và 5 vé đã đặt nên hiện `55/60`. Dùng `↑` `↓`, `PgUp` `PgDn`, `Home` `End` để di chuyển và `Enter` để mở sơ đồ ghế. Danh sách này cũng dùng để chọn suất khi đặt và hủy vé.
 
+Suất đã bán hết có cột Trống bằng 0 và hiện màu đỏ; suất này vẫn mở được để xem sơ đồ. Trong ảnh, S13 có `0/2`:
+
+![Suất hết vé](docs/screenshots/50-suat-het-ve.png)
+
+Danh sách hiện tối đa 15 dòng. Khi có nhiều suất hơn, danh sách tự cuộn theo con trỏ và góc dưới cho biết vị trí, ví dụ `Suất 17/18`:
+
+![Danh sách lịch chiếu dài](docs/screenshots/55-danh-sach-cuon.png)
+
 ### 3. Sơ đồ ghế và kiểm tra ghế trống
 
 ![Sơ đồ ghế](docs/screenshots/05-so-do-ghe.png)
@@ -84,11 +104,41 @@ Sơ đồ không lưu thành ma trận. Mỗi ô được vẽ bằng cách duy�
 | `[*]` vàng | Ghế đang chọn hoặc thuộc dãy vừa tìm được |
 | Nền sáng | Vị trí con trỏ |
 
-Mã ghế gồm chữ cái hàng và số cột: `A5` là hàng A, cột 5. Dùng các phím mũi tên để xem trạng thái từng ghế.
+Mã ghế gồm chữ cái hàng và số cột: `A5` là hàng A, cột 5. Dùng các phím mũi tên để xem trạng thái từng ghế. Con trỏ trên ghế đã đặt có nền đỏ:
+
+![Con trỏ trên ghế đã đặt](docs/screenshots/37-con-tro-ghe-da-dat.png)
 
 ![Tìm dãy ghế liền nhau](docs/screenshots/06-tim-day-ghe.png)
 
-Nhấn `T` rồi nhập số ghế để tìm dãy ghế trống liền nhau, ví dụ 4 ghế cho kết quả `A5, A6, A7, A8`. Nhấn `N` để xem dãy tiếp theo. Cách hoạt động được giải thích ở phần [thuật toán đệ quy](#thuật-toán-đệ-quy).
+Nhấn `T` để mở ô nhập ở cuối màn hình, gõ số ghế cần tìm rồi nhấn `Enter`; `Esc` để bỏ qua:
+
+![Nhập số ghế cần tìm](docs/screenshots/17-nhap-so-ghe.png)
+
+Ví dụ 4 ghế cho kết quả `A5, A6, A7, A8`, các ghế tìm được hiện màu vàng và con trỏ nhảy đến ghế đầu tiên của dãy. Cách hoạt động được giải thích ở phần [thuật toán đệ quy](#thuật-toán-đệ-quy).
+
+Nhấn `N` để tìm dãy tiếp theo, bắt đầu từ ghế ngay sau ghế đầu của dãy hiện tại, nên kết quả là `A6, A7, A8, A9`:
+
+![Dãy ghế tiếp theo](docs/screenshots/18-day-tiep-theo.png)
+
+Khi không còn dãy nào phía sau, chương trình báo ở cuối màn hình. Trong ảnh, với 10 ghế liền nhau, chỉ các hàng B, D, E là còn trống toàn bộ và đều đã được duyệt qua:
+
+![Không còn dãy khác](docs/screenshots/39-khong-con-day-khac.png)
+
+Số ghế phải lớn hơn 0:
+
+![Số ghế không hợp lệ](docs/screenshots/38-so-ghe-khong-hop-le.png)
+
+Nếu số ghế lớn hơn số ghế của một hàng, chương trình báo lỗi ngay vì dãy phải nằm trên cùng một hàng:
+
+![Số ghế quá lớn](docs/screenshots/19-so-ghe-qua-lon.png)
+
+Nếu không có dãy phù hợp, chương trình báo ở cuối màn hình. Ảnh dưới là phòng 2 × 4 có các cột 2 và 3 đã đặt, nên không thể có 3 ghế liền nhau dù vẫn còn 4 ghế trống:
+
+![Không có dãy ghế phù hợp](docs/screenshots/35-khong-co-day.png)
+
+Sơ đồ tự căn giữa theo kích thước phòng. Ảnh dưới là phòng lớn nhất, 10 hàng × 15 cột:
+
+![Phòng lớn nhất](docs/screenshots/34-phong-lon-nhat.png)
 
 ### 4. Thêm lịch chiếu
 
@@ -96,19 +146,87 @@ Nhấn `T` rồi nhập số ghế để tìm dãy ghế trống liền nhau, v�
 
 Nhập lần lượt 10 trường. `Enter` kiểm tra rồi sang trường sau, `↑` về trường trước, `Esc` hủy. Dòng gợi ý phía dưới mô tả định dạng của trường đang nhập. Nếu mã phim đã tồn tại, tên phim được tự điền để thống kê không tách một phim thành hai.
 
+Mỗi trường được kiểm tra ngay khi nhấn `Enter`. Giá trị sai sẽ không cho đi tiếp và hiện lỗi màu đỏ:
+
+**Mã để trống:** `Mã không được để trống.`
+
+![Mã để trống](docs/screenshots/41-ma-trong.png)
+
+**Tên phim để trống:** `Tên phim không được để trống.`
+
+![Tên phim để trống](docs/screenshots/42-ten-phim-trong.png)
+
+**Ngày không tồn tại:** `Ngày không hợp lệ. Hãy nhập dd/mm/yyyy.`
+
+![Ngày không tồn tại](docs/screenshots/24-ngay-sai.png)
+
+**Giờ sai:** `Giờ không hợp lệ. Hãy nhập HH:MM, ví dụ 19:30.`
+
+![Giờ sai](docs/screenshots/43-gio-sai.png)
+
+**Thời lượng sai:** `Thời lượng phải từ 1 đến 600 phút.`
+
+![Thời lượng sai](docs/screenshots/44-thoi-luong-sai.png)
+
+**Số hàng sai:** `Số hàng phải từ 1 đến 10.`
+
+![Số hàng sai](docs/screenshots/45-so-hang-sai.png)
+
+**Số ghế mỗi hàng sai:** `Số ghế mỗi hàng phải từ 1 đến 15.`
+
+![Số ghế mỗi hàng sai](docs/screenshots/46-so-cot-sai.png)
+
+**Giá vé sai:** `Giá vé phải từ 1.000 đến 10.000.000 đồng.`
+
+![Giá vé sai](docs/screenshots/47-gia-ve-sai.png)
+
+Khi nhập xong trường cuối, chương trình kiểm tra thêm với các suất đã có rồi đưa con trỏ về trường cần sửa. Mã suất không được trùng:
+
+![Trùng mã suất](docs/screenshots/25-trung-ma-suat.png)
+
+Mã phim đã có thì tên phim phải giống tên đã lưu, để thống kê theo phim không bị sai:
+
+![Mã phim khác tên](docs/screenshots/49-ma-phim-khac-ten.png)
+
+Giờ chiếu không được trùng với suất khác cùng phòng. Trong ảnh, suất mới bị từ chối vì trùng phòng P1 với S03; cách tính nằm ở [công thức trùng lịch](#trùng-lịch-chiếu).
+
 ![Báo trùng lịch](docs/screenshots/08-bao-trung-lich.png)
 
-Khi nhập xong, chương trình kiểm tra trùng lịch. Trong ảnh, suất mới bị từ chối vì trùng phòng P1 với S03; cách tính nằm ở [công thức trùng lịch](#trùng-lịch-chiếu).
+Nếu mọi kiểm tra đều đạt, suất được thêm vào danh sách theo đúng thứ tự thời gian và trạng thái chuyển sang `● Chưa lưu`:
+
+![Thêm suất thành công](docs/screenshots/48-them-thanh-cong.png)
 
 ### 5. Đặt vé
 
 ![Chọn ghế](docs/screenshots/09-chon-ghe.png)
 
-Bước 1: chọn suất. Bước 2: di chuyển đến ghế và nhấn `Space` để chọn hoặc bỏ chọn; nhấn `T` để chương trình tự chọn một dãy liền nhau. Ghế đã đặt không chọn được. **Tạm tính** được cập nhật theo số ghế: 2 × 85.000 = 170.000 đ.
+Bước 1: chọn suất. Bước 2: di chuyển đến ghế và nhấn `Space` để chọn hoặc bỏ chọn; nhấn `T` để chương trình tự chọn một dãy liền nhau. **Tạm tính** được cập nhật theo số ghế: 2 × 85.000 = 170.000 đ.
+
+Khi nhấn `T` và nhập số ghế, chương trình dùng hàm đệ quy để thay các ghế đang chọn bằng dãy đầu tiên tìm được, ví dụ 3 ghế cho `A5, A6, A7`:
+
+![Tự chọn dãy ghế](docs/screenshots/40-dat-ve-tu-chon-day.png)
+
+Nếu không có dãy phù hợp, các ghế đang chọn được giữ nguyên:
+
+![Không có dãy khi đặt vé](docs/screenshots/51-dat-ve-khong-co-day.png)
+
+Ghế đã đặt không chọn được, và chương trình báo lỗi ở dưới sơ đồ:
+
+![Ghế đã có người đặt](docs/screenshots/20-ghe-da-dat.png)
+
+Nhấn `Enter` khi chưa chọn ghế sẽ có nhắc nhở:
+
+![Chưa chọn ghế](docs/screenshots/21-chua-chon-ghe.png)
 
 ![Thông tin khách](docs/screenshots/10-thong-tin-khach.png)
 
-Bước 3: nhấn `Enter` rồi nhập họ tên và số điện thoại. Tiếng Việt có dấu được hỗ trợ.
+Bước 3: nhấn `Enter` rồi nhập họ tên và số điện thoại. Tiếng Việt có dấu được hỗ trợ. `Esc` quay về sơ đồ ghế. Họ tên không được để trống:
+
+![Thiếu họ tên](docs/screenshots/22-ho-ten-trong.png)
+
+Số điện thoại phải có từ 9 đến 11 chữ số:
+
+![Số điện thoại sai](docs/screenshots/23-sdt-sai.png)
 
 ![Xác nhận đặt vé](docs/screenshots/11-xac-nhan-dat-ve.png)
 
@@ -122,11 +240,21 @@ Vé được thêm vào danh sách trong bộ nhớ, nên trạng thái chuyển
 
 ![Chọn vé cần hủy](docs/screenshots/13-huy-ve.png)
 
-Sau khi chọn suất, con trỏ tự đặt ở ghế đã đặt đầu tiên và màn hình hiện thông tin khách của ghế đó. Nhấn `Enter` hoặc `Space` để hủy. Ghế chưa có người đặt sẽ được báo lỗi.
+Sau khi chọn suất, con trỏ tự đặt ở ghế đã đặt đầu tiên và màn hình hiện thông tin khách của ghế đó. Nhấn `Enter` hoặc `Space` để hủy.
 
 ![Xác nhận hủy vé](docs/screenshots/14-xac-nhan-huy-ve.png)
 
-Nút mặc định là **Giữ vé**. Hủy vé xóa nút khỏi danh sách liên kết, vì vậy doanh thu tự giảm mà không cần biến riêng.
+Nút mặc định là **Giữ vé**, dùng `←` `→` để đổi nút. Sau khi xác nhận, ghế trở lại trạng thái trống và trạng thái chuyển sang `● Chưa lưu`:
+
+![Hủy vé thành công](docs/screenshots/26-huy-thanh-cong.png)
+
+Hủy vé xóa nút khỏi danh sách liên kết, vì vậy doanh thu tự giảm mà không cần biến riêng. Chọn ghế chưa có người đặt sẽ được báo lỗi:
+
+![Ghế chưa có người đặt](docs/screenshots/27-huy-ghe-trong.png)
+
+Với suất chưa có vé nào, con trỏ nằm ở ghế A1 và mọi ghế đều trống:
+
+![Suất chưa có vé](docs/screenshots/52-huy-suat-chua-co-ve.png)
 
 ### 7. Thống kê doanh thu
 
@@ -138,15 +266,59 @@ Dùng `←` `→` để đổi bảng và `↑` `↓` để cuộn.
 
 Bảng theo suất giữ thứ tự thời gian; bảng theo phim xếp doanh thu giảm dần. Độ dài thanh ngang được tính theo [công thức thanh biểu đồ](#thanh-biểu-đồ).
 
+Bảng hiện tối đa 14 dòng, dùng `↑` `↓` để cuộn khi có nhiều hơn; dòng tổng ở cuối luôn tính trên toàn bộ dữ liệu:
+
+![Thống kê dài phải cuộn](docs/screenshots/56-thong-ke-cuon.png)
+
 ### 8. Lưu, đọc lại và thoát
 
 ![Lưu dữ liệu](docs/screenshots/16-luu-du-lieu.png)
 
-**Lưu dữ liệu** ghi toàn bộ suất chiếu và vé vào `data.txt`. Ảnh trên được chụp sau khi đặt thêm 2 vé nên tổng là 24 vé. **Đọc lại dữ liệu** thay dữ liệu đang mở bằng nội dung tệp; nếu còn thay đổi chưa lưu, chương trình sẽ hỏi trước.
+**Lưu dữ liệu** ghi toàn bộ suất chiếu và vé vào `data.txt`. Ảnh trên được chụp sau khi đặt thêm 2 vé nên tổng là 24 vé.
+
+Nếu không ghi được tệp, chương trình báo lỗi, dữ liệu đang mở vẫn còn nguyên và trạng thái không đổi:
+
+![Lỗi khi lưu](docs/screenshots/53-luu-loi.png)
+
+**Đọc lại dữ liệu** thay dữ liệu đang mở bằng nội dung tệp. Nếu còn thay đổi chưa lưu, chương trình hỏi trước và nút mặc định là **Quay lại**:
+
+![Hỏi trước khi đọc lại](docs/screenshots/28-doc-lai-hoi.png)
+
+Đọc xong, chương trình báo số suất và số vé đã đọc:
+
+![Đọc lại thành công](docs/screenshots/29-doc-lai-xong.png)
+
+Nếu tệp lỗi, chương trình báo dòng bị lỗi và giữ nguyên dữ liệu đang mở:
+
+![Đọc lại thất bại](docs/screenshots/54-doc-lai-that-bai.png)
+
+Khi thoát mà chưa lưu, có ba lựa chọn: **Lưu và thoát**, **Không lưu** và **Quay lại**.
 
 ![Thoát khi chưa lưu](docs/screenshots/15-thoat-chua-luu.png)
 
-Khi thoát mà chưa lưu, có ba lựa chọn: **Lưu và thoát**, **Không lưu** và **Quay lại**.
+### 9. Các trạng thái đặc biệt
+
+**Chưa có dữ liệu:** nếu chưa có `data.txt`, chương trình vẫn mở bình thường và mọi chỉ số bằng 0.
+
+![Menu khi chưa có dữ liệu](docs/screenshots/30-chua-co-du-lieu.png)
+
+Các chức năng cần suất chiếu sẽ nhắc thêm lịch chiếu trước:
+
+![Chưa có suất chiếu](docs/screenshots/31-chua-co-suat.png)
+
+Bảng thống kê báo chưa có dữ liệu:
+
+![Thống kê khi chưa có dữ liệu](docs/screenshots/32-thong-ke-rong.png)
+
+**Tệp dữ liệu hỏng:** chương trình báo dòng bị lỗi, sao lưu tệp thành `data.txt.loi` để lần lưu sau không ghi đè mất, rồi bắt đầu với dữ liệu trống.
+
+![Tệp dữ liệu hỏng](docs/screenshots/33-tep-hong.png)
+
+**Cửa sổ quá nhỏ:** nếu cửa sổ nhỏ hơn 80 × 25, chương trình tạm dừng và yêu cầu phóng to thay vì vẽ sai bố cục.
+
+![Cửa sổ quá nhỏ](docs/screenshots/36-cua-so-qua-nho.png)
+
+Các thông báo chỉ xảy ra khi máy hết bộ nhớ không được chụp ảnh, vì không thể tạo ra khi chạy bình thường.
 
 ## Công thức tính toán
 
