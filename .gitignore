@@ -1,0 +1,6 @@
+build/
+*.exe
+*.obj
+*.tmp
+data.txt.loi
+kiemthu_tam.txt
